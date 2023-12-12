@@ -1,0 +1,71 @@
+# === Java/Spring Boot (Backend) ===
+
+# Compiled Java classes
+/backend/target/
+/backend/target/**
+
+# Package files
+/backend/*.jar
+/backend/*.war
+/backend/*.nar
+/backend/*.ear
+/backend/*.zip
+/backend/*.tar.gz
+/backend/*.rar
+
+# Maven specific
+/backend/pom.xml.tag
+/backend/pom.xml.releaseBackup
+/backend/pom.xml.versionsBackup
+/backend/pom.xml.next
+/backend/release.properties
+/backend/dependency-reduced-pom.xml
+/backend/buildNumber.properties
+/backend/.mvn
+/backend/*.log
+/backend/hs_err_pid*
+
+# === Angular (Frontend) ===
+
+# Dependencies
+/frontend/node_modules/
+/frontend/node/
+/frontend/.pnp
+/frontend/.pnp.js
+
+# Compiled files
+/frontend/dist/
+/frontend/tmp/
+/frontend/out-tsc/
+
+# Logs
+/frontend/logs/
+/frontend/*.log
+/frontend/npm-debug.log*
+
+# IDE specific
+/frontend/.idea/
+/frontend/.vscode/
+/frontend/*.suo
+/frontend/*.ntvs*
+/frontend/*.njsproj
+/frontend/*.sln
+
+# Angular specific
+/frontend/angular.json
+/frontend/ngcc_lock_file
+/frontend/.angular/cache/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temp files
+*.tmp
+*.temp
+*.swp
