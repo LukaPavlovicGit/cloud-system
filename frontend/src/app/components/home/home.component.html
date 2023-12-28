@@ -1,0 +1,35 @@
+<div class="center">
+  <div>
+    <button
+      [ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_READ_USERS), 'button-transparent': !hasPermission(PermissionEnum.CAN_READ_USERS)}"
+      [routerLink]="'/read-users'" class="btn btn-primary"
+    >
+      Read users
+    </button>
+  </div>
+  <div>
+    <button
+      [ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_CREATE_USERS), 'button-transparent': !hasPermission(PermissionEnum.CAN_CREATE_USERS)}"
+      [routerLink]="'/create-user'" class="btn btn-primary"
+    >
+      Create user
+    </button>
+  </div>
+  <div>
+    <button
+      [ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_UPDATE_USERS), 'button-transparent': !hasPermission(PermissionEnum.CAN_UPDATE_USERS)}"
+      [routerLink]="['/update-user', '']" class="btn btn-primary"
+    >
+      Update user
+    </button>
+  </div>
+  <div>
+    <button
+      [ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_DELETE_USERS), 'button-transparent': !hasPermission(PermissionEnum.CAN_DELETE_USERS)}"
+      [routerLink]="'/delete-user'" class="btn btn-danger"
+    >
+      Delete user
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,36 @@
+<div>
+  <form [formGroup]="createUserForm" (submit)="createUser()" class="my-3">
+    <div class="mb-3">
+      <input type="text" class="form-control" id="firstName" placeholder="FirstName" [formControlName]="'firstName'" />
+    </div>
+    <div class="mb-3">
+      <input type="text" class="form-control" id="lastName" placeholder="LastName" [formControlName]="'lastName'" />
+    </div>
+    <div class="mb-3">
+      <input type="email" class="form-control" id="email" placeholder="Email" [formControlName]="'email'" />
+    </div>
+    <div class="mb-3">
+      <input type="password" class="form-control" id="password" placeholder="Password" [formControlName]="'password'" />
+    </div>
+
+    <p>Permissions:</p>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="can_read_users" [formControlName]="'can_read_users'" />
+      <label class="form-check-label" for="can_read_users">Read users</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="can_create_users" [formControlName]="'can_create_users'" />
+      <label class="form-check-label" for="can_create_users">Create users</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="can_update_users" [formControlName]="'can_update_users'" />
+      <label class="form-check-label" for="can_update_users">Update users</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="can_delete_users" [formControlName]="'can_delete_users'" />
+      <label class="form-check-label" for="can_delete_users">Delete users</label>
+    </div>
+
+    <button [disabled]="!createUserForm.valid" type="submit" class="btn btn-primary mt-3">Submit</button>
+  </form>
+</div>

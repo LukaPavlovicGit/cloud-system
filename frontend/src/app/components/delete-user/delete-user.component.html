@@ -1,0 +1,16 @@
+<div class="home-main">
+  <form [formGroup]="deleteUserByIdForm" (submit)="deleteUserById()" class="my-3 mb-5">
+    <div class="form-group">
+      <input type="text" class="form-control" id="id1" placeholder="id" [formControlName]="'id'"/>
+    </div>
+    <button [disabled]="!deleteUserByIdForm.valid" type="submit" class="btn btn-primary mt-3"> Submit</button>
+  </form>
+
+  <form [formGroup]="deleteUserByEmailForm" (submit)="deleteUserByEmail()" class="my-3">
+    <div class="form-group">
+      <input type="text" class="form-control" id="id2" placeholder="email" [formControlName]="'email'"/>
+    </div>
+    <button [disabled]="!deleteUserByEmailForm.valid" type="submit" class="btn btn-primary mt-3"> Submit</button>
+  </form>
+</div>
+

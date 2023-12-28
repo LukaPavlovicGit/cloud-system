@@ -1,0 +1,14 @@
+div > button {
+  width: 150px; /* Adjust the width as needed */
+  height: 50px; /* Adjust the height as needed */
+  margin: 5px; /* Add margin between buttons if desired */
+}
+
+.button-green {
+  background-color: green;
+}
+
+.button-transparent {
+  background-color: transparent;
+  color: #000000;
+}

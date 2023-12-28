@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+
+body, app-root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensure the container takes up the full viewport height */
+}
+
+header {
+  /* Add your header styles here */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+
+
+/* Optionally, you can apply these styles to specific components if needed */
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
