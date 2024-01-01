@@ -16,6 +16,9 @@ public class MachineSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private Long userId;
+
     @Enumerated(EnumType.STRING)
     private MachineAction targetAction;
 

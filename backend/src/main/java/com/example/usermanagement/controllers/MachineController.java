@@ -2,12 +2,12 @@ package com.example.usermanagement.controllers;
 
 import com.example.usermanagement.data.dto.MachineCreateDto;
 import com.example.usermanagement.data.dto.MachineScheduleDto;
+import com.example.usermanagement.data.entities.Permission;
 import com.example.usermanagement.data.entities.enums.MachineStatus;
 import com.example.usermanagement.data.entities.enums.PermissionType;
 import com.example.usermanagement.exceptions.CustomException;
 import com.example.usermanagement.security.CheckSecurity;
 import com.example.usermanagement.service.MachineService;
-import com.example.usermanagement.service.impl.MachineServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,24 +35,31 @@ public class MachineController {
 
 
 
-    @CheckSecurity(permissions = {PermissionType.CAN_SEARCH_MACHINES})
+    @CheckSecurity(permissions = {PermissionType.CAN_SEARCH_VACUUM})
     @GetMapping
     public ResponseEntity<?> machinesSearch(@RequestParam Long userId,
-                                            @RequestParam(required = false) String name,
+                                            @RequestParam(required = false) String machineName,
                                             @RequestParam(required = false) List<MachineStatus> statuses,
                                             @RequestParam(required = false) Long dateFrom,
                                             @RequestParam(required = false) Long dateTo
     ) {
-        return ResponseEntity.ok(machineService.searchMachines(userId, name, statuses, dateFrom, dateTo));
+
+        return ResponseEntity.ok(machineService.searchMachines(userId, machineName, statuses, dateFrom, dateTo));
     }
 
-    @CheckSecurity(permissions = {PermissionType.CAN_CREATE_MACHINES})
+    @CheckSecurity(permissions = {PermissionType.CAN_SEARCH_VACUUM})
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getMachineById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(machineService.getMachineById(id));
+    }
+
+    @CheckSecurity(permissions = {PermissionType.CAN_CREATE_VACUUM})
     @PostMapping
     public ResponseEntity<?> machineCreate(@RequestBody MachineCreateDto machineCreateDto){
         return ResponseEntity.ok(machineService.createMachine(machineCreateDto));
     }
 
-    @CheckSecurity(permissions = {PermissionType.CAN_START_MACHINES})
+    @CheckSecurity(permissions = {PermissionType.CAN_START_VACUUM})
     @PutMapping("/machine-start/{id}")
     public ResponseEntity<?> attemptMachineStart(@PathVariable("id") Long id){
         logger.info("attempting machine start");
@@ -65,7 +72,7 @@ public class MachineController {
         }
     }
 
-    @CheckSecurity(permissions = {PermissionType.CAN_STOP_MACHINES})
+    @CheckSecurity(permissions = {PermissionType.CAN_STOP_VACUUM})
     @PutMapping("/machine-stop/{id}")
     public ResponseEntity<?> attemptMachineStop(@PathVariable("id") Long id){
         logger.info("attempting machine stop");
@@ -78,20 +85,20 @@ public class MachineController {
         }
     }
 
-    @CheckSecurity(permissions = {PermissionType.CAN_RESTART_MACHINES})
-    @PutMapping("/machine-restart/{id}")
+    @CheckSecurity(permissions = {PermissionType.CAN_DISCHARGE_VACUUM})
+    @PutMapping("/machine-discharge/{id}")
     public ResponseEntity<?> attemptMachineRestart(@PathVariable("id") Long id){
-        logger.info("attempting machine restart");
+        logger.info("attempting machine discharge");
         try {
-            machineService.attemptMachineRestart(id);
+            machineService.attemptMachineDischarge(id);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (CustomException e) {
-            logger.info("machine restart unsuccessful");
+            logger.info("machine discharge unsuccessful");
             return new ResponseEntity<>(e, e.getHttpStatus());
         }
     }
 
-    @CheckSecurity(permissions = {PermissionType.CAN_DESTROY_MACHINES})
+    @CheckSecurity(permissions = {PermissionType.CAN_DESTROY_VACUUM})
     @DeleteMapping("/machine-destroy/{id}")
     public ResponseEntity<?> attemptMachineDestroy(@PathVariable("id") Long id){
         logger.info("attempting machine destroy");
@@ -104,12 +111,12 @@ public class MachineController {
         }
     }
 
-    @CheckSecurity(permissions = {PermissionType.CAN_START_MACHINES})
-    @PostMapping("/schedule-machine-start")
+    @CheckSecurity(permissions = {PermissionType.CAN_START_VACUUM})
+    @PutMapping("/schedule-machine-start")
     public ResponseEntity<?> scheduleMachineStart(@RequestBody MachineScheduleDto machineScheduleDto){
         logger.info("scheduling machine start");
         try {
-            machineService.scheduleStartMachine(machineScheduleDto);
+            machineService.scheduleMachineStart(machineScheduleDto);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (CustomException e) {
             logger.info("scheduling machine start unsuccessful");
@@ -117,12 +124,13 @@ public class MachineController {
         }
     }
 
-    @CheckSecurity(permissions = {PermissionType.CAN_STOP_MACHINES})
-    @PostMapping("/schedule-machine-stop")
+    @CheckSecurity(permissions = {PermissionType.CAN_STOP_VACUUM})
+    @PutMapping("/schedule-machine-stop")
     public ResponseEntity<?> scheduleMachineStop(@RequestBody MachineScheduleDto machineScheduleDto){
         logger.info("scheduling machine stop");
+
         try {
-            machineService.scheduleStopMachine(machineScheduleDto);
+            machineService.scheduleMachineStop(machineScheduleDto);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (CustomException e) {
             logger.info("scheduling machine stop unsuccessful");
@@ -130,17 +138,21 @@ public class MachineController {
         }
     }
 
-    @CheckSecurity(permissions = {PermissionType.CAN_RESTART_MACHINES})
-    @PostMapping("/schedule-machine-restart")
+    @CheckSecurity(permissions = {PermissionType.CAN_DISCHARGE_VACUUM})
+    @PutMapping("/schedule-machine-discharge")
     public ResponseEntity<?> scheduleMachineRestart(@RequestBody MachineScheduleDto machineScheduleDto){
-        logger.info("scheduling machine restart");
+        logger.info("scheduling machine discharge");
         try {
-            machineService.scheduleRestartMachine(machineScheduleDto);
+            machineService.scheduleMachineDischarge(machineScheduleDto);
             return ResponseEntity.ok(HttpStatus.OK);
         } catch (CustomException e) {
-            logger.info("scheduling machine restart unsuccessful");
+            logger.info("scheduling machine discharge unsuccessful");
             return new ResponseEntity<>(e, e.getHttpStatus());
         }
     }
 
+    @GetMapping("/machine-schedule-action-errors/{userId}")
+    public ResponseEntity<?> getMachineScheduleActionErrors(@PathVariable("userId") Long userId){
+        return ResponseEntity.ok(machineService.getMachineScheduleActionErrors(userId));
+    }
 }

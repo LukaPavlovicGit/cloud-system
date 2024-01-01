@@ -1,9 +1,7 @@
 package com.example.usermanagement.queueListener;
 
 import com.example.usermanagement.data.dto.MachineQueueDto;
-import com.example.usermanagement.repositories.MachineRepository;
 import com.example.usermanagement.service.MachineService;
-import com.example.usermanagement.service.impl.MachineServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -38,10 +36,12 @@ public class MachineQueueListener {
         MachineQueueDto machineQueueDto = (MachineQueueDto) is.readObject();
 
         logger.info(String.format("Rabbit listener on the queue:\"%s\". Machine id:%s. Target action:%s", "machineQueue", machineQueueDto.getMachineId(), machineQueueDto.getMachineAction()));
+
+        // Potrebno je ovaj switch staviti u try catch block da bismo uhvatili i sacuvali greske koje se dogode
         switch(machineQueueDto.getMachineAction()) {
             case START: { machineService.machineStart(machineQueueDto.getMachineId()); break; }
             case STOP: { machineService.machineStop(machineQueueDto.getMachineId()); break; }
-            case RESTART: { machineService.machineRestart(machineQueueDto.getMachineId()); break; }
+            case DISCHARGE: { machineService.machineDischarge(machineQueueDto.getMachineId()); break; }
         }
     }
 }

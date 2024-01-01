@@ -46,22 +46,22 @@ public class BootstrapData implements CommandLineRunner {
         permissionUserDelete.setPermission(PermissionType.CAN_DELETE_USERS);
 
         Permission permissionMachineCreate = new Permission();
-        permissionMachineCreate.setPermission(PermissionType.CAN_CREATE_MACHINES);
+        permissionMachineCreate.setPermission(PermissionType.CAN_CREATE_VACUUM);
 
         Permission permissionMachineSearch = new Permission();
-        permissionMachineSearch.setPermission(PermissionType.CAN_SEARCH_MACHINES);
+        permissionMachineSearch.setPermission(PermissionType.CAN_SEARCH_VACUUM);
 
         Permission permissionMachineStart = new Permission();
-        permissionMachineStart.setPermission(PermissionType.CAN_START_MACHINES);
+        permissionMachineStart.setPermission(PermissionType.CAN_START_VACUUM);
 
         Permission permissionMachineStop = new Permission();
-        permissionMachineStop.setPermission(PermissionType.CAN_STOP_MACHINES);
+        permissionMachineStop.setPermission(PermissionType.CAN_STOP_VACUUM);
 
         Permission permissionMachineRestart = new Permission();
-        permissionMachineRestart.setPermission(PermissionType.CAN_RESTART_MACHINES);
+        permissionMachineRestart.setPermission(PermissionType.CAN_DISCHARGE_VACUUM);
 
         Permission permissionMachineDestroy = new Permission();
-        permissionMachineDestroy.setPermission(PermissionType.CAN_DESTROY_MACHINES);
+        permissionMachineDestroy.setPermission(PermissionType.CAN_DESTROY_VACUUM);
 
 
         //posto je u useru @Cascade(CascadeType.PERSIST) -> ne sme da se radi!

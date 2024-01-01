@@ -4,7 +4,9 @@ public enum MachineStatus {
 
     STOPPED("STOPPED"),
 
-    RUNNING("RUNNING");
+    RUNNING("RUNNING"),
+
+    DISCHARGING("DISCHARGING");
 
     private final String status;
 

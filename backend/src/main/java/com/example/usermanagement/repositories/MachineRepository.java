@@ -4,6 +4,7 @@ import com.example.usermanagement.data.entities.Machine;
 import com.example.usermanagement.data.entities.enums.MachineStatus;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -17,11 +18,15 @@ public interface MachineRepository extends JpaRepositoryImplementation<Machine, 
 
     @Query("SELECT m FROM Machine m WHERE m.userId = :userId " +
             "AND (:name IS NULL OR m.name LIKE CONCAT('%', :name, '%')) " +
-            "AND (:statuses IS NULL OR m.status IN :statuses) " +
+            "AND (coalesce(:statuses) IS NULL OR m.status IN (:statuses)) " +
             "AND (:from IS NULL OR m.createdDate >= :from) " +
             "AND (:to IS NULL OR m.createdDate <= :to)" +
             "AND m.active = true ")
-    List<Machine> findAllByCriteria(Long userId, String name, List<MachineStatus> statuses, Date from, Date to);
+    List<Machine> findAllByCriteria(@Param("userId") Long userId,
+                                    @Param("name") String name,
+                                    @Param("statuses") List<MachineStatus> statuses,
+                                    @Param("from") Date from,
+                                    @Param("to") Date to);
 }
 
 /*

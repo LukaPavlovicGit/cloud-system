@@ -2,7 +2,9 @@ package com.example.usermanagement.data.mapper;
 
 import com.example.usermanagement.data.dto.MachineCreateDto;
 import com.example.usermanagement.data.dto.MachineDto;
+import com.example.usermanagement.data.dto.MachineScheduleErrorDto;
 import com.example.usermanagement.data.entities.Machine;
+import com.example.usermanagement.data.entities.MachineScheduleError;
 import org.springframework.stereotype.Component;
 
 
@@ -25,11 +27,23 @@ public class MachineMapper {
         machineDto.setUserId(machine.getUserId());
         machineDto.setStatus(machine.getStatus());
         machineDto.setActive(machine.isActive());
-        machineDto.setCreateAt(machine.getCreatedDate());
+        machineDto.setCreatedAt(machine.getCreatedDate());
         machineDto.setName(machine.getName());
 
         return machineDto;
     }
 
+    public MachineScheduleErrorDto MachineScheduleErrorToMachineScheduleErrorDto(MachineScheduleError err){
+
+        MachineScheduleErrorDto errDto = new MachineScheduleErrorDto();
+
+        errDto.setUserId(err.getUserId());
+        errDto.setMachineId(err.getMachineId());
+        errDto.setAction(err.getAction());
+        errDto.setDateError(err.getDateError());
+        errDto.setMessage(err.getMessage());
+
+        return errDto;
+    }
 
 }

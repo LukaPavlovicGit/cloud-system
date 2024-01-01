@@ -13,7 +13,7 @@ public class MachineDto {
     private Long id;
     private Long userId;
     private MachineStatus status;
-    private Date createAt;
+    private Date createdAt;
     private boolean active;
     private String name;
 

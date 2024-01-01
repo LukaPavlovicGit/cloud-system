@@ -17,6 +17,9 @@ public class MachineScheduleError {
     private Long id;
 
     @Column
+    private Long userId;
+
+    @Column
     private String message;
 
     @Enumerated(EnumType.STRING)

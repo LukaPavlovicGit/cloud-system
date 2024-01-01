@@ -1,9 +1,6 @@
 package com.example.usermanagement.service.impl;
 
-import com.example.usermanagement.data.dto.MachineCreateDto;
-import com.example.usermanagement.data.dto.MachineDto;
-import com.example.usermanagement.data.dto.MachineQueueDto;
-import com.example.usermanagement.data.dto.MachineScheduleDto;
+import com.example.usermanagement.data.dto.*;
 import com.example.usermanagement.data.entities.Machine;
 import com.example.usermanagement.data.entities.MachineScheduleError;
 import com.example.usermanagement.data.entities.MachineSchedule;
@@ -28,6 +25,7 @@ import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,14 +57,28 @@ public class MachineServiceImpl implements MachineService {
     @Override
     public List<MachineDto> searchMachines(Long userId, String name, List<MachineStatus> statuses, Long from, Long to) {
 
+        name = (name == null || name.isEmpty()) ? null : name;
         Date fromDate = (from == null) ? null : Date.from(Instant.ofEpochMilli(from));
         Date toDate = (to == null) ? null : Date.from(Instant.ofEpochMilli(to));
         statuses = (statuses == null || statuses.isEmpty()) ? null : statuses;
-        name = (name == null || name.isEmpty()) ? null : name;
+
+        String toPrt = "null";
+
+        if(statuses != null){
+            toPrt = statuses.toString();
+        }
+
+        logger.info("name: " + name + ", statuses " + toPrt +  ", fromDate " + fromDate + ", toDate: " + toDate);
 
         List<Machine> machines = machineRepository.findAllByCriteria(userId, name, statuses, fromDate, toDate);
 
         return machines.stream().map(machineMapper::MachineToMachineDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public MachineDto getMachineById(Long id) {
+        Optional<Machine> optionalMachine = machineRepository.findById(id);
+        return optionalMachine.map(machineMapper::MachineToMachineDto).orElse(null);
     }
 
     @Transactional
@@ -78,8 +90,9 @@ public class MachineServiceImpl implements MachineService {
 
     @Transactional
     @Override
-    public void scheduleStartMachine(MachineScheduleDto machineScheduleDto) {
+    public void scheduleMachineStart(MachineScheduleDto machineScheduleDto) {
         MachineSchedule machineSchedule = new MachineSchedule();
+        machineSchedule.setUserId(machineScheduleDto.getUserId());
         machineSchedule.setScheduleDate(Date.from(Instant.ofEpochMilli(machineScheduleDto.getScheduleDate())));
         machineSchedule.setMachineId(machineScheduleDto.getMachineId());
         machineSchedule.setTargetAction(MachineAction.START);
@@ -88,8 +101,9 @@ public class MachineServiceImpl implements MachineService {
 
     @Transactional
     @Override
-    public void scheduleStopMachine(MachineScheduleDto machineScheduleDto) {
+    public void scheduleMachineStop(MachineScheduleDto machineScheduleDto) {
         MachineSchedule machineSchedule = new MachineSchedule();
+        machineSchedule.setUserId(machineScheduleDto.getUserId());
         machineSchedule.setScheduleDate(Date.from(Instant.ofEpochMilli(machineScheduleDto.getScheduleDate())));
         machineSchedule.setMachineId(machineScheduleDto.getMachineId());
         machineSchedule.setTargetAction(MachineAction.STOP);
@@ -98,12 +112,19 @@ public class MachineServiceImpl implements MachineService {
 
     @Transactional
     @Override
-    public void scheduleRestartMachine(MachineScheduleDto machineScheduleDto) {
+    public void scheduleMachineDischarge(MachineScheduleDto machineScheduleDto) {
         MachineSchedule machineSchedule = new MachineSchedule();
+        machineSchedule.setUserId(machineScheduleDto.getUserId());
         machineSchedule.setScheduleDate(Date.from(Instant.ofEpochMilli(machineScheduleDto.getScheduleDate())));
         machineSchedule.setMachineId(machineScheduleDto.getMachineId());
-        machineSchedule.setTargetAction(MachineAction.RESTART);
+        machineSchedule.setTargetAction(MachineAction.DISCHARGE);
         machineScheduleRepository.save(machineSchedule);
+    }
+
+    @Override
+    public List<MachineScheduleErrorDto> getMachineScheduleActionErrors(Long userId) {
+        List<MachineScheduleError> errors = machineScheduleErrorRepository.findAllByUserId(userId);
+        return errors.stream().map(machineMapper::MachineScheduleErrorToMachineScheduleErrorDto).collect(Collectors.toList());
     }
 
     @Transactional
@@ -124,10 +145,10 @@ public class MachineServiceImpl implements MachineService {
 
     @Transactional
     @Override
-    public void attemptMachineRestart(Long id) {
+    public void attemptMachineDischarge(Long id) {
         Machine machine = getMachine(id);
-        checkMachineConditions(machine, getRequiredMachineStatusForTargetAction(MachineAction.RESTART));
-        performMachineAction(machine, MachineAction.RESTART);
+        checkMachineConditions(machine, getRequiredMachineStatusForTargetAction(MachineAction.DISCHARGE));
+        performMachineAction(machine, MachineAction.DISCHARGE);
     }
 
     @Override
@@ -143,61 +164,43 @@ public class MachineServiceImpl implements MachineService {
     @Transactional
     public void machineStart(Long machineId) throws InterruptedException {
         Machine machine = machineRepository.findById(machineId).orElseThrow(() -> new NotFoundException("invalid machine id"));
-
         logger.info(String.format("Machine with id:%d is STARTING", machineId));
-        Thread.sleep(10000);
-
-        try {
-            machine.setStatus(MachineStatus.RUNNING);
-            machine.setBusy(false);
-            machine = machineRepository.saveAndFlush(machine);
-            logger.info(String.format("Machine with id:%d has been STARTED successfully", machineId));
-        }
-        catch (ObjectOptimisticLockingFailureException e) {
-            throw new MachineException("someone has overtaken you in action");
-        }
+        Thread.sleep(1000);
+        machine.setStatus(MachineStatus.RUNNING);
+        machine.setBusy(false);
+        machine = machineRepository.saveAndFlush(machine);
+        logger.info(String.format("Machine with id:%d has been STARTED successfully", machineId));
     }
     @Transactional
     public void machineStop(Long machineId) throws InterruptedException {
         Machine machine = machineRepository.findById(machineId).orElseThrow(() -> new NotFoundException("invalid machine id"));
-
         logger.info(String.format("Machine with id:%d is STOPPING", machineId));
-        Thread.sleep(10000);
-
-        try {
-            machine.setStatus(MachineStatus.STOPPED);
-            machine.setBusy(false);
+        Thread.sleep(1000);
+        machine.setStatus(MachineStatus.STOPPED);
+        machine.setRunningStopCycles(machine.getRunningStopCycles() + 1);
+        if(machine.getRunningStopCycles() % 3 == 0){
             machine = machineRepository.saveAndFlush(machine);
+            sendToQueue(machine.getId(), MachineAction.DISCHARGE);
+            logger.info(String.format("Machine with id:%d has been STOPPED successfully and sent to DISCHARGE", machineId));
+        } else {
+            machine.setBusy(false);
+            machineRepository.saveAndFlush(machine);
             logger.info(String.format("Machine with id:%d has been STOPPED successfully", machineId));
         }
-        catch (ObjectOptimisticLockingFailureException e) {
-            throw new MachineException("someone has overtaken you in action");
-        }
-
     }
     @Transactional
-    public void machineRestart(Long machineId) throws InterruptedException {
+    public void machineDischarge(Long machineId) throws InterruptedException {
         Machine machine = machineRepository.findById(machineId).orElseThrow(() -> new NotFoundException("invalid machine id"));
-
-        logger.info(String.format("Machine with id:%d is RESTARTING", machineId));
-
-        try {
-            Thread.sleep(5000);
-            machine.setStatus(MachineStatus.STOPPED);
-            machine = machineRepository.saveAndFlush(machine);
-            logger.info(String.format("Machine with id:%d has been STOPPED", machineId));
-
-            Thread.sleep(5000);
-            machine.setStatus(MachineStatus.RUNNING);
-            machine.setBusy(false);
-            machine = machineRepository.saveAndFlush(machine);
-
-            logger.info(String.format("Machine with id:%d has been STARTED again", machineId));
-            logger.info(String.format("Machine with id:%d has been RESTARTED successfully", machineId));
-        }
-        catch (ObjectOptimisticLockingFailureException e) {
-            throw new MachineException("someone has overtaken you in action");
-        }
+        logger.info(String.format("DISCHARGING for the machine with id:%d starts...", machineId));
+        Thread.sleep(1000);
+        logger.info(String.format("Machine with id:%d is DISCHARGING", machineId));
+        machine.setStatus(MachineStatus.DISCHARGING);
+        machine = machineRepository.saveAndFlush(machine);
+        Thread.sleep(1000);
+        machine.setStatus(MachineStatus.STOPPED);
+        machine.setBusy(false);
+        machineRepository.saveAndFlush(machine);
+        logger.info(String.format("Machine with id:%d has been DISCHARGED successfully", machineId));
     }
 
     private Machine getMachine(Long id) {
@@ -229,8 +232,8 @@ public class MachineServiceImpl implements MachineService {
 
     private MachineStatus getRequiredMachineStatusForTargetAction(MachineAction targetAction){
         return switch (targetAction) {
-            case START -> MachineStatus.STOPPED;
-            case STOP, RESTART -> MachineStatus.RUNNING;
+            case START, DISCHARGE -> MachineStatus.STOPPED;
+            case STOP -> MachineStatus.RUNNING;
         };
     }
 
@@ -238,7 +241,6 @@ public class MachineServiceImpl implements MachineService {
         MachineQueueDto machineQueueDto = new MachineQueueDto();
         machineQueueDto.setMachineId(id);
         machineQueueDto.setMachineAction(machineAction);
-
         rabbitTemplate.convertAndSend("machineQueue", machineQueueDto);
     }
 
@@ -252,24 +254,27 @@ public class MachineServiceImpl implements MachineService {
         List<MachineSchedule> machineSchedules = machineScheduleRepository.findAllByScheduleDateBefore(date);
 
         for(MachineSchedule machineSchedule: machineSchedules){
+            Long userId = machineSchedule.getUserId();
             Long machineId = machineSchedule.getMachineId();
             MachineAction targetAction = machineSchedule.getTargetAction();
 
             try {
-                logger.info(String.format("Machine id: %s. Attempting action: %s", machineId, targetAction));
+                logger.info(String.format("Machine id: %s. Attempting scheduled action: %s", machineId, targetAction));
                 switch (targetAction){
                     case START: attemptMachineStart(machineId); break;
                     case STOP: attemptMachineStop(machineId); break;
-                    case RESTART: attemptMachineRestart(machineId); break;
+                    case DISCHARGE: attemptMachineDischarge(machineId); break;
                 }
             }
             catch (MachineException e) {
+                logger.info(String.format("Machine id: %s. Attempting scheduled action: %s Unsuccessful", machineId, targetAction));
                 MachineScheduleError scheduleError = new MachineScheduleError();
+                scheduleError.setUserId(userId);
                 scheduleError.setMessage(e.getMessage());
                 scheduleError.setAction(targetAction);
                 scheduleError.setMachineId(machineId);
                 scheduleError.setDateError(date);
-                machineScheduleErrorRepository.save(scheduleError);
+                machineScheduleErrorRepository.saveAndFlush(scheduleError);
             }
         }
         machineScheduleRepository.deleteAll(machineSchedules);

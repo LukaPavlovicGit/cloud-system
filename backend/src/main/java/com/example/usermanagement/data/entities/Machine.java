@@ -35,11 +35,15 @@ public class Machine {
     @Column(nullable = false)
     private boolean busy;
 
+    @Column(nullable = false)
+    private Long runningStopCycles;
+
 
     public Machine(){
         active = true;
         createdDate = Date.from(Instant.now());
         status = MachineStatus.STOPPED;
+        runningStopCycles = 0L;
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.usermanagement.service;
 import com.example.usermanagement.data.dto.MachineCreateDto;
 import com.example.usermanagement.data.dto.MachineDto;
 import com.example.usermanagement.data.dto.MachineScheduleDto;
+import com.example.usermanagement.data.dto.MachineScheduleErrorDto;
 import com.example.usermanagement.data.entities.enums.MachineStatus;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public interface MachineService {
 
 
     List<MachineDto> searchMachines(Long userId, String name, List<MachineStatus> statuses, Long from, Long to);
+    MachineDto getMachineById(Long id);
 
     MachineDto createMachine(MachineCreateDto machineCreateDto);
 
@@ -18,7 +20,7 @@ public interface MachineService {
 
     void attemptMachineStop(Long id);
 
-    void attemptMachineRestart(Long id);
+    void attemptMachineDischarge(Long id);
 
     void attemptMachineDestroy(Long id);
 
@@ -26,11 +28,13 @@ public interface MachineService {
 
     void machineStop(Long id) throws InterruptedException;
 
-    void machineRestart(Long id) throws InterruptedException;
+    void machineDischarge(Long id) throws InterruptedException;
 
-    void scheduleStartMachine(MachineScheduleDto machineScheduleDto);
+    void scheduleMachineStart(MachineScheduleDto machineScheduleDto);
 
-    void scheduleStopMachine(MachineScheduleDto machineScheduleDto);
+    void scheduleMachineStop(MachineScheduleDto machineScheduleDto);
 
-    void scheduleRestartMachine(MachineScheduleDto machineScheduleDto);
+    void scheduleMachineDischarge(MachineScheduleDto machineScheduleDto);
+
+    List<MachineScheduleErrorDto> getMachineScheduleActionErrors(Long userId);
 }
