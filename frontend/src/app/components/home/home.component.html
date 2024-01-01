@@ -1,35 +1,68 @@
 <div class="center">
   <div>
     <button
-      [ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_READ_USERS), 'button-transparent': !hasPermission(PermissionEnum.CAN_READ_USERS)}"
-      [routerLink]="'/read-users'" class="btn btn-primary"
+      class="btn btn-primary"
+      [ngClass]="hasPermission(PermissionEnum.CAN_READ_USERS) ? 'button-green' : 'button-transparent'"
+      [routerLink]="'/read-users'"
     >
       Read users
     </button>
   </div>
   <div>
     <button
-      [ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_CREATE_USERS), 'button-transparent': !hasPermission(PermissionEnum.CAN_CREATE_USERS)}"
-      [routerLink]="'/create-user'" class="btn btn-primary"
+      class="btn btn-primary"
+      [ngClass]="hasPermission(PermissionEnum.CAN_CREATE_USERS) ? 'button-green' : 'button-transparent'"
+      [routerLink]="'/create-user'"
     >
       Create user
     </button>
   </div>
   <div>
     <button
-      [ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_UPDATE_USERS), 'button-transparent': !hasPermission(PermissionEnum.CAN_UPDATE_USERS)}"
-      [routerLink]="['/update-user', '']" class="btn btn-primary"
+      class="btn btn-primary"
+      [ngClass]="hasPermission(PermissionEnum.CAN_UPDATE_USERS) ? 'button-green' : 'button-transparent'"
+      [routerLink]="['/update-user', '']"
     >
       Update user
     </button>
   </div>
   <div>
     <button
-      [ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_DELETE_USERS), 'button-transparent': !hasPermission(PermissionEnum.CAN_DELETE_USERS)}"
-      [routerLink]="'/delete-user'" class="btn btn-danger"
+      class="btn btn-primary"
+      [ngClass]="hasPermission(PermissionEnum.CAN_DELETE_USERS) ? 'button-green' : 'button-transparent'"
+      [routerLink]="'/delete-user'"
     >
       Delete user
     </button>
   </div>
+  <div>
+    <button
+      class="btn btn-primary"
+      [ngClass]="hasPermission(PermissionEnum.CAN_SEARCH_VACUUM) ? 'button-green' : 'button-transparent'"
+      [routerLink]="'/search-machines'"
+    >
+      Search machines
+    </button>
+  </div>
+  <div>
+    <button
+      class="btn btn-primary"
+      [ngClass]="hasPermission(PermissionEnum.CAN_CREATE_VACUUM) ? 'button-green' : 'button-transparent'"
+      [routerLink]="'/machine-create'"
+    >
+      Create machine
+    </button>
+  </div>
+  <div>
+    <button
+      class="btn btn-primary"
+      [ngClass]="'button-green'"
+      [routerLink]="'/machine-schedule-action-errors'"
+    >
+      Errors
+    </button>
+  </div>
 
 </div>
+
+<!--[ngClass]="{'button-green': hasPermission(PermissionEnum.CAN_CREATE_MACHINES), 'button-transparent': !hasPermission(PermissionEnum.CAN_DELETE_USERS)}"-->

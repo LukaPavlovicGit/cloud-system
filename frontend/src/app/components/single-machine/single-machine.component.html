@@ -1,0 +1,77 @@
+<div class="container">
+
+  <div class="row mb-2">
+    <h1>Machine Details</h1>
+  </div>
+
+  <div class="row mb-5">
+    <div class="machine-details col">
+      <p class="detail-item"><span class="detail-label">Id:</span> {{machine.id}}</p>
+      <p class="detail-item"><span class="detail-label">UserId:</span> {{machine.userId}}</p>
+      <p class="detail-item"><span class="detail-label">Machine Name:</span> {{machine.name}}</p>
+      <p class="detail-item"><span class="detail-label">Status:</span> {{machine.status}}</p>
+      <p class="detail-item"><span class="detail-label">Active:</span> {{machine.active}}</p>
+      <p class="detail-item"><span class="detail-label">Created At:</span> {{machine.createdAt | date: 'medium'}}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div>
+        <button
+          [ngClass]="{'btn btn-success': machine.status == MachineStatusEnum.STOPPED, 'button-green': machine.status == MachineStatusEnum.RUNNING}"
+          (click)="machineAction(machine.status == MachineStatusEnum.STOPPED ? MachineAction.START : MachineAction.STOP, machine.id)"
+          [disabled]="machine.status == MachineStatusEnum.STOPPED ? !hasPermission(PermissionEnum.CAN_START_VACUUM) : !hasPermission(PermissionEnum.CAN_STOP_VACUUM)"
+        >
+          {{machine.status == MachineStatusEnum.STOPPED ? 'Start' : 'Stop'}}
+        </button>
+      </div>
+      <div>
+        <button
+          [ngClass]="'btn btn-warning'"
+          (click)="machineAction(MachineAction.DISCHARGE, machine.id)"
+          [disabled]="!hasPermission(PermissionEnum.CAN_DISCHARGE_VACUUM)"
+        >
+          Discharge
+        </button>
+      </div>
+      <div>
+        <button
+          [ngClass]="'btn btn-danger'"
+          (click)="machineAction(MachineAction.DESTROY, machine.id)"
+          [disabled]="!hasPermission(PermissionEnum.CAN_DESTROY_VACUUM)"
+        >
+          Destroy
+        </button>
+      </div>
+    </div>
+    <div class="col">
+      <div>
+        <button
+          [ngClass]="'btn btn-default border-primary'"
+          [routerLink]="['/schedule', MachineAction.START , machine.id]"
+          [disabled]="!hasPermission(PermissionEnum.CAN_SEARCH_VACUUM)"
+        >
+          Schedule Start
+        </button>
+      </div>
+      <div>
+        <button
+          [ngClass]="'btn btn-default border-primary'"
+          [routerLink]="['/schedule', MachineAction.STOP , machine.id]"
+          [disabled]="!hasPermission(PermissionEnum.CAN_STOP_VACUUM)"
+        >
+          Schedule Stop
+        </button>
+      </div>
+      <div>
+        <button
+          [ngClass]="'btn btn-default border-primary'"
+          [routerLink]="['/schedule', MachineAction.DISCHARGE , machine.id]"
+          [disabled]="!hasPermission(PermissionEnum.CAN_DISCHARGE_VACUUM)"
+        >
+          Schedule Discharge
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

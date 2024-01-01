@@ -1,4 +1,4 @@
-import {PermissionEnum} from "./roleEnum/PermissionEnum";
+import {PermissionEnum} from "./enums/PermissionEnum";
 
 export interface User {
   id: number

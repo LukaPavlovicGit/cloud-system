@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
-import {PermissionEnum} from "../../model/roleEnum/PermissionEnum";
+import {PermissionEnum} from "../../model/enums/PermissionEnum";
 
 @Component({
   selector: 'app-home',

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {Subscription} from "rxjs";
-import {PermissionEnum} from "../../model/roleEnum/PermissionEnum";
+import {PermissionEnum} from "../../model/enums/PermissionEnum";
 
 @Component({
   selector: 'app-root',

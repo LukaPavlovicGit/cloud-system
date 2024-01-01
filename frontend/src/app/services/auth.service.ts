@@ -6,7 +6,7 @@ import { Token } from '../model/Token'
 import { jwtDecode } from 'jwt-decode'
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router'
 import {BehaviorSubject, catchError, Observable, tap, throwError} from "rxjs";
-import {PermissionEnum} from "../model/roleEnum/PermissionEnum";
+import {PermissionEnum} from "../model/enums/PermissionEnum";
 
 
 @Injectable({
@@ -55,17 +55,17 @@ export class AuthService implements CanActivate {
     return !!localStorage.getItem('jwt') && !this.isTokenExpired()
   }
 
-  private isTokenExpired(){
-    let decoded = this.decodeToken()
-    return (new Date().getTime() < decoded.exp)
-  }
-
-  private decodeToken(){
+  decodeToken(){
     let token = localStorage.getItem('jwt')
     if(token) {
       return jwtDecode<TokenPayload>(token)
     }
     return {id: -1, sub: '', permissions: [], exp: -1}
+  }
+
+  private isTokenExpired(){
+    let decoded = this.decodeToken()
+    return (new Date().getTime() < decoded.exp)
   }
 
   setLoggedInBehavior(loggedIn: boolean){

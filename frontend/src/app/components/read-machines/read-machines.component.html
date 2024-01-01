@@ -1,0 +1,96 @@
+
+
+<div class="container">
+
+  <div class="row mb-5">
+    <form [formGroup]="searchMachinesForm" (ngSubmit)="searchMachines()">
+      <div class="mb-2">
+        <label for="name">Name:</label>
+        <input id="name" type="text" formControlName="machineName">
+      </div>
+
+      <div class="mb-2">
+        <label for="runningStatus">Running Status:</label>
+        <input id="runningStatus" type="checkbox" formControlName="runningStatus">
+      </div>
+
+      <div class="mb-2">
+        <label for="stoppedStatus">Stopped Status:</label>
+        <input id="stoppedStatus" type="checkbox" formControlName="stoppedStatus">
+      </div>
+
+      <div class="mb-2">
+        <label for="dischargingStatus">Discharging Status:</label>
+        <input id="dischargingStatus" type="checkbox" formControlName="dischargingStatus">
+      </div>
+
+      <div class="mb-2">
+        <label for="dateFrom">Date From:</label>
+        <input id="dateFrom" type="datetime-local" formControlName="dateFrom">
+      </div>
+
+      <div class="mb-2">
+        <label for="dateTo">Date To:</label>
+        <input id="dateTo" type="datetime-local" formControlName="dateTo">
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <div class="row mat-elevation-z8">
+
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <!-- UserId Column -->
+      <ng-container matColumnDef="userId">
+        <th mat-header-cell *matHeaderCellDef> UserId </th>
+        <td mat-cell *matCellDef="let element"> {{element.userId}} </td>
+      </ng-container>
+
+      <!-- Weight Column  -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <!-- CreatedAt Column -->
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef> CreatedAt </th>
+        <td mat-cell *matCellDef="let element"> {{element.createdAt}} </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container>
+
+      <!-- Active Column -->
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef> Active </th>
+        <td mat-cell *matCellDef="let element"> {{element.active}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row  *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/single-machine', row.id]"></tr>
+    </table>
+
+    <!--  (click)="machineClicked(row)-->
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                   showFirstLastButtons
+                   aria-label="Select page of periodic elements">
+    </mat-paginator>
+
+  </div>
+
+</div>
+
+

@@ -7,7 +7,12 @@ import {ReadUserComponent} from "./components/read-user/read-user.component";
 import {LoginUserComponent} from "./components/login-user/login-user.component";
 import {HomeComponent} from "./components/home/home.component";
 import {AuthService} from "./services/auth.service";
-import {PermissionEnum} from "./model/roleEnum/PermissionEnum";
+import {PermissionEnum} from "./model/enums/PermissionEnum";
+import {ReadMachinesComponent} from "./components/read-machines/read-machines.component";
+import {SingleMachineComponent} from "./components/single-machine/single-machine.component";
+import {ScheduleComponent} from "./components/schedule/schedule.component";
+import {CreateMachineComponent} from "./components/create-machine/create-machine.component";
+import {ReadErrorsComponent} from "./components/read-errors/read-errors.component";
 
 const routes: Routes = [
   {
@@ -42,6 +47,30 @@ const routes: Routes = [
     component: DeleteUserComponent,
     canActivate: [AuthService],
     data: {permissions: [PermissionEnum.CAN_DELETE_USERS]}
+  },
+  {
+    path: 'search-machines',
+    component: ReadMachinesComponent,
+    canActivate: [AuthService],
+    data: {permissions: [PermissionEnum.CAN_SEARCH_VACUUM]}
+  },
+  {
+    path: 'single-machine/:id',
+    component: SingleMachineComponent,
+  },
+  {
+    path: 'schedule/:action/:id',
+    component: ScheduleComponent,
+  },
+  {
+    path: 'machine-create',
+    component: CreateMachineComponent,
+    canActivate: [AuthService],
+    data: {permissions: [PermissionEnum.CAN_CREATE_VACUUM]}
+  },
+  {
+    path: 'machine-schedule-action-errors',
+    component: ReadErrorsComponent,
   }
 ];
 

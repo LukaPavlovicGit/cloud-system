@@ -14,6 +14,15 @@ import { DeleteUserComponent } from './components/delete-user/delete-user.compon
 import { ReadUserComponent } from './components/read-user/read-user.component'
 import { LoginUserComponent } from './components/login-user/login-user.component'
 import { HomeComponent } from './components/home/home.component'
+import { ReadMachinesComponent } from './components/read-machines/read-machines.component'
+import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatTableModule } from '@angular/material/table'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { SingleMachineComponent } from './components/single-machine/single-machine.component'
+import {MatInputModule} from "@angular/material/input";
+import { ScheduleComponent } from './components/schedule/schedule.component';
+import { CreateMachineComponent } from './components/create-machine/create-machine.component';
+import { ReadErrorsComponent } from './components/read-errors/read-errors.component'
 
 @NgModule({
   declarations: [
@@ -23,7 +32,12 @@ import { HomeComponent } from './components/home/home.component'
     DeleteUserComponent,
     ReadUserComponent,
     LoginUserComponent,
-    HomeComponent
+    HomeComponent,
+    ReadMachinesComponent,
+    SingleMachineComponent,
+    ScheduleComponent,
+    CreateMachineComponent,
+    ReadErrorsComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +47,11 @@ import { HomeComponent } from './components/home/home.component'
     ReactiveFormsModule,
     RouterOutlet,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    MatTableModule,
+    BrowserAnimationsModule,
+    MatPaginatorModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

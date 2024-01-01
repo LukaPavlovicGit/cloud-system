@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {User} from "../../model/User";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
-import {PermissionEnum} from "../../model/roleEnum/PermissionEnum";
+import {PermissionEnum} from "../../model/enums/PermissionEnum";
 
 @Component({
   selector: 'app-read-user',
@@ -43,7 +43,7 @@ export class ReadUserComponent {
   deleteUser(id: number){
     this.userService.deleteUserById(id).subscribe({
       next: (user) => alert('user deleted'),
-      error: (err) => console.error(err),
+      error: (err) => console.error(err)
     })
   }
 

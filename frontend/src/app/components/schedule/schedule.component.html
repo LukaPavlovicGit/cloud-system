@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <a>{{machineAction}}</a>
+      <input type="date" class="form-control schedule-form" id="date-schedule">
+      <input type="time" class="form-control schedule-form" id="time-schedule">
+      <button
+        [ngClass]="'btn btn-default border-primary'"
+        (click)="scheduleMachineAction()"
+      >
+        Schedule Restart
+      </button>
+    </div>
+  </div>
+</div>

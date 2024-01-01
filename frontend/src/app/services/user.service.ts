@@ -33,7 +33,8 @@ export class UserService {
   }
 
   getUser(id: number) {
-    return this.httpClient.get<User>(`${this.usersUrl}/${id}`, {
+    return this.httpClient.get<User>(`${this.usersUrl}/${id}`,
+      {
       headers: this.headers
     }).pipe(
       catchError(err => {

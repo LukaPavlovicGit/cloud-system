@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center align-items-center vh-100">
+      <div class="content text-center">
+        <form [formGroup]="createMachineForm" (submit)="machineCreate()">
+          <div class="form-group mb-3">
+            <input type="text" class="form-control" id="email" placeholder="Machine name" [formControlName]="'machineName'">
+          </div>
+          <button type="submit" class="btn btn-primary ">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
